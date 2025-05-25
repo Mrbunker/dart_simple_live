@@ -25,52 +25,43 @@ class FollowUserItem extends StatelessWidget {
     var site = Sites.allSites[item.siteId]!;
     return ListTile(
       contentPadding: AppStyle.edgeInsetsL16.copyWith(right: 4),
-      leading: NetImage(
-        item.face,
-        width: 48,
-        height: 48,
-        borderRadius: 24,
-      ),
-      title: Text.rich(
-        TextSpan(
-          text: item.userName,
-          children: [
-            WidgetSpan(
-              alignment: ui.PlaceholderAlignment.middle,
-              child: Obx(
-                () => Offstage(
-                  offstage: item.liveStatus.value == 0,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      AppStyle.hGap12,
-                      Container(
-                        width: 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: item.liveStatus.value == 2
-                              ? Colors.green
-                              : Colors.grey,
-                          borderRadius: AppStyle.radius12,
-                        ),
-                      ),
-                      AppStyle.hGap4,
-                      Text(
-                        getStatus(item.liveStatus.value),
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.normal,
-                          color:
-                              item.liveStatus.value == 2 ? null : Colors.grey,
-                        ),
-                      ),
-                    ],
+      leading: SizedBox(
+        width: 54,
+        height: 54,
+        child: Obx(
+          () => Stack(
+            fit: StackFit.expand,
+            children: [
+              // 在直播状态下显示的外圈
+              Offstage(
+                offstage: item.liveStatus.value != 2,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.green, width: 2.5),
                   ),
                 ),
               ),
-            ),
-          ],
+              // 头像 - 居中显示
+              Positioned.fill(
+                child: Center(
+                  child: NetImage(
+                    item.face,
+                    width: 46,
+                    height: 46,
+                    borderRadius: 23,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
+      ),
+      title: Text(
+        item.userName,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
       subtitle: Row(
         children: [
